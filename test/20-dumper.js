@@ -29,3 +29,18 @@ suite('Dumper', function () {
     });
   });
 });
+
+suite('Dump flow reference', function(){
+  var samplesDir = path.resolve(__dirname, 'dump-flow-reference');
+
+  fs.readdirSync(samplesDir).forEach(function(jsFile){
+    if(path.extname(jsFile) !== '.js') return;
+
+    test(path.basename(jsFile,'.js'), function(){
+      var sample = require(path.resolve(samplesDir, jsFile));
+      var serialized = yaml.dump(sample, {flowLevel: 1});
+      var deserialized = yaml.load(serialized);
+      assert.deepEqual(deserialized, sample);
+    })
+  })
+})
